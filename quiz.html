@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Gentle Rephrase Quiz</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #f5f5f5; }
+    #quiz-container { background: white; padding: 2em; border-radius: 12px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .question { font-size: 1.2em; margin-bottom: 1em; }
+    .option { display: block; margin: 0.5em 0; padding: 0.8em; background: #e0f7fa; border: none; border-radius: 8px; cursor: pointer; }
+    .option:hover { background: #b2ebf2; }
+    #result { margin-top: 1em; font-weight: bold; }
+    #next-button, #restart-button { display: none; margin-top: 1em; padding: 0.5em 1em; }
+    #language-toggle { margin-bottom: 1em; }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+    <div id="language-toggle">
+      <button onclick="setLanguage('ja')">🇯🇵 日本語</button>
+      <button onclick="setLanguage('en')">🇺🇸 English</button>
+    </div>
+    <div id="question" class="question"></div>
+    <div id="options"></div>
+    <div id="result"></div>
+    <button id="next-button" onclick="nextQuestion()">▶ 次の問題へ</button>
+    <button id="restart-button" onclick="restartQuiz()">▶ もう一度チャレンジ</button>
+  </div>
+
+  <script>
+    const quizData = {
+      ja: [
+        {
+          q: "Q1：「やってらんない！くそ！」\nやさしい言葉に言いかえるなら？",
+          o: ["① 自分が悪いってことだよね", "② これは、いったん距離を置くタイミングかも", "③ やめてやる！"],
+          c: 1,
+          e: [
+            "❌ 衝動的に自分を責めると心が傷つきます。",
+            "✅ 怒りの爆発を外に向けず、「距離を置く」が自分を守る第一歩。",
+            "❌ 衝動的な放棄は、後悔や孤立を招くことがあります。"
+          ]
+        },
+        {
+          q: "Q2：「もう限界…」\nやさしい言葉に言いかえるなら？",
+          o: ["① 限界を超えてみよう", "② 深呼吸してリセットしよう", "③ とにかく耐えよう"],
+          c: 1,
+          e: [
+            "❌ さらに追い込むのは逆効果です。",
+            "✅ 限界＝終わりではなく、リセットのサインと受け止めて。",
+            "❌ 我慢は美徳ではなく、負担を蓄積させます。"
+          ]
+        }
+      ],
+      en: [
+        {
+          q: "Q1: “I can’t take this anymore!”\nWhich phrase softens this best?",
+          o: ["① Maybe it’s all my fault", "② It might be a timing to take some distance", "③ I quit!"],
+          c: 1,
+          e: [
+            "❌ Blaming yourself makes it worse.",
+            "✅ Taking distance is the first step to self-care.",
+            "❌ Quitting in anger may cause regret and loneliness."
+          ]
+        },
+        {
+          q: "Q2: “I’ve hit my limit…”\nWhich phrase softens this best?",
+          o: ["① Go beyond your limits!", "② Let’s reset with a deep breath", "③ Just endure it"],
+          c: 1,
+          e: [
+            "❌ Forcing yourself will only exhaust you more.",
+            "✅ Hitting your limit can be a signal to reset.",
+            "❌ Enduring blindly can hurt your mental health."
+          ]
+        }
+      ]
+    };
+
+    let lang = "ja";
+    let current = 0;
+
+    function setLanguage(l) {
+      lang = l;
+      current = 0;
+      document.getElementById("next-button").textContent = lang === "ja" ? "▶ 次の問題へ" : "▶ Next Question";
+      document.getElementById("restart-button").textContent = lang === "ja" ? "▶ もう一度チャレンジ" : "▶ Try Again";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = quizData[lang][current];
+      document.getElementById("question").textContent = q.q;
+      const options = document.getElementById("options");
+      const result = document.getElementById("result");
+      options.innerHTML = "";
+      result.innerHTML = "";
+
+      q.o.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option";
+        btn.onclick = () => {
+          result.innerHTML = q.e[idx];
+          document.getElementById("next-button").style.display = current < quizData[lang].length - 1 ? "inline" : "none";
+          document.getElementById("restart-button").style.display = current >= quizData[lang].length - 1 ? "inline" : "none";
+        };
+        options.appendChild(btn);
+      });
+    }
+
+    function nextQuestion() {
+      current++;
+      document.getElementById("next-button").style.display = "none";
+      showQuestion();
+    }
+
+    function restartQuiz() {
+      current = 0;
+      document.getElementById("restart-button").style.display = "none";
+      showQuestion();
+    }
+
+    window.onload = () => {
+      setLanguage("ja");
+    };
+  </script>
+</body>
+</html>
