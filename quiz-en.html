@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gentle Rephrase Quiz (English)</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #f9f9f9; }
+    #quiz-container { background: white; padding: 2em; border-radius: 12px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .question { font-size: 1.2em; margin-bottom: 1em; }
+    .option { display: block; margin: 0.5em 0; padding: 0.8em; background: #fff3cd; border: none; border-radius: 8px; cursor: pointer; }
+    .option:hover { background: #ffe8a1; }
+    #result { margin-top: 1em; font-weight: bold; }
+    #next-button { display: none; margin-top: 1em; padding: 0.5em 1em; }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+    <div id="question" class="question"></div>
+    <div id="options"></div>
+    <div id="result"></div>
+    <button id="next-button" onclick="nextQuestion()">Next ▶</button>
+  </div>
+  <script>
+    const quizData = [
+      { question: "Q1: “I can’t take this anymore!”\nWhich phrase softens this feeling best?", options: ["① I guess it's my fault", "② It might be a timing to take some distance", "③ I quit!"], correct: 1 },
+      { question: "Q2: “I’ve hit my limit…”\nWhich phrase softens this feeling best?", options: ["① Let’s push through it", "② Let’s reset with a deep breath", "③ Just endure it"], correct: 1 },
+      { question: "Q3: “Everything feels impossible”\nWhich phrase softens this feeling best?", options: ["① Just give up", "② Step by step is just fine", "③ I have to do everything"], correct: 1 },
+      { question: "Q4: “No one understands me…”\nWhich phrase softens this feeling best?", options: ["① Maybe I’m just too different", "② Let yourself understand you first", "③ It’s better not to expect anything"], correct: 1 },
+      { question: "Q5: “Why is it always me…?”\nWhich phrase softens this feeling best?", options: ["① Try finding someone to lean on", "② Maybe I’m just unlucky", "③ Just accept it silently"], correct: 0 }
+    ];
+    let current = 0;
+    function showQuestion() {
+      document.getElementById("result").innerHTML = "";
+      const q = quizData[current];
+      document.getElementById("question").textContent = q.question;
+      const options = document.getElementById("options");
+      options.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option";
+        btn.onclick = () => {
+          document.getElementById("result").textContent = idx === q.correct ? "✅ Correct!" : "❌ Try again";
+          document.getElementById("next-button").style.display = current < quizData.length - 1 ? "block" : "none";
+        };
+        options.appendChild(btn);
+      });
+    }
+    function nextQuestion() {
+      current++;
+      document.getElementById("next-button").style.display = "none";
+      showQuestion();
+    }
+    showQuestion();
+  </script>
+</body>
+</html>
