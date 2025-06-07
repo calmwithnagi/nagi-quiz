@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Gentle Rephrase Quiz</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #f0f0f0; }
+    #quiz-container { background: white; padding: 2em; border-radius: 12px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .question { font-size: 1.2em; margin-bottom: 1em; }
+    .option { display: block; margin: 0.5em 0; padding: 0.8em; background: #e0f7fa; border: none; border-radius: 8px; cursor: pointer; }
+    .option:hover { background: #b2ebf2; }
+    #result { margin-top: 1em; font-weight: bold; }
+    #next-button, #retry-button { display: none; margin-top: 1em; padding: 0.5em 1em; }
+    #lang-switch { margin-bottom: 1em; }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+    <select id="lang-switch" onchange="switchLang(this.value)">
+      <option value="jp">日本語</option>
+      <option value="en">English</option>
+    </select>
+    <div id="question" class="question"></div>
+    <div id="options"></div>
+    <div id="result"></div>
+    <button id="next-button" onclick="nextQuestion()">次の問題へ ▶</button>
+    <button id="retry-button" onclick="restartQuiz()">▶ もう一度チャレンジ / Try Again</button>
+  </div>
+  <script src="quiz_data.js"></script>
+</body>
+</html>
