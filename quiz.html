@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nagi's Gentle Rephrase Quiz</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #f5f5f5; }
+    #quiz-container { background: white; padding: 2em; border-radius: 12px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .question { font-size: 1.2em; margin-bottom: 1em; }
+    .option { display: block; margin: 0.5em 0; padding: 0.8em; background: #e0f7fa; border: none; border-radius: 8px; cursor: pointer; }
+    .option:hover { background: #b2ebf2; }
+    #result { margin-top: 1em; font-weight: bold; }
+    #next-button, #retry-button { display: none; margin-top: 1em; padding: 0.5em 1em; }
+    #lang-select button { margin: 0.5em; padding: 0.5em 1em; }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+    <div id="lang-select">
+      <p>言語を選んでください / Choose your language</p>
+      <button onclick="startQuiz('jp')">日本語</button>
+      <button onclick="startQuiz('en')">English</button>
+    </div>
+    <div id="question" class="question" style="display:none;"></div>
+    <div id="options"></div>
+    <div id="result"></div>
+    <button id="next-button" onclick="nextQuestion()"></button>
+    <button id="retry-button" onclick="restartQuiz()">▶ もう一度チャレンジ / Try Again</button>
+  </div>
+  <script>
+    const quizzes = {
+      jp: [
+        {
+          q: "Q1：「やってらんない！くそ！」\nやさしい言葉に言いかえるなら？",
+          options: ["① 自分が悪いってことだよね", "② これは、いったん距離を置くタイミングかも", "③ やめてやる！"],
+          correct: 1,
+          explanations: [
+            "自己否定では状況は変わりません。まずは心を守ることが大切です。",
+            "怒りの爆発を外に向けず、「距離を置く」が自分を守る第一歩。",
+            "衝動的な放棄は後悔や孤立を招くことがあります。まずは「間」を取る選択を。"
+          ]
+        },
+        {
+          q: "Q2：「もう限界…」\nやさしい言葉に言いかえるなら？",
+          options: ["① 限界を超えてみよう", "② 深呼吸してリセットしよう", "③ とにかく耐えよう"],
+          correct: 1,
+          explanations: [
+            "さらに無理を重ねると体も心も壊れてしまいます。",
+            "限界＝終わりではなく、リセットのサインと受け止めて。",
+            "耐えるだけでは、解決につながりません。"
+          ]
+        },
+        {
+          q: "Q3：「何もかも無理」\nやさしい言葉に言いかえるなら？",
+          options: ["① 諦めよう", "② 少しずつでいい", "③ 全部やらなきゃ"],
+          correct: 1,
+          explanations: [
+            "あきらめたくなるほどつらいのは頑張った証拠。少し休んで。",
+            "全部無理、は脳の錯覚。「ひとつずつ」が現実的な対処法。",
+            "全部一度にやる必要はありません。"
+          ]
+        },
+        {
+          q: "Q4：「誰もわかってくれない」\nやさしい言葉に言いかえるなら？",
+          options: ["① 感情を出すと迷惑だから黙ろう", "② 自分の気持ちは間違ってるかもしれない", "③ まず自分が自分をわかってあげよう"],
+          correct: 2,
+          explanations: [
+            "感情を抑え込むと余計に苦しくなります。",
+            "気持ちは感じていいものです。間違いではありません。",
+            "まず自分が自分を理解することから始まります。"
+          ]
+        },
+        {
+          q: "Q5：「なんで私ばっかり…」\nやさしい言葉に言いかえるなら？",
+          options: ["① 頼れる誰かを探してみよう", "② みんな頑張ってるから比べない", "③ 愚痴を言っても何も変わらない"],
+          correct: 0,
+          explanations: [
+            "孤独感は強いストレスになります。人を頼るのも大切な力。",
+            "比べることでさらに苦しくなってしまうことも。",
+            "つらさを話すことが第一歩です。"
+          ]
+        }
+      ],
+      en: [
+        {
+          q: "Q1: “I can’t take this anymore!”\nWhich phrase softens this feeling best?",
+          options: ["① Maybe it's my fault", "② It might be a timing to take some distance", "③ I quit!"],
+          correct: 1,
+          explanations: [
+            "Blaming yourself doesn’t lead to peace.",
+            "Taking distance is the first step to protect yourself.",
+            "Impulsive quitting often leads to regret or isolation."
+          ]
+        },
+        {
+          q: "Q2: “I’ve hit my limit…”\nWhich phrase softens this feeling best?",
+          options: ["① Push beyond the limit", "② Let’s reset with a deep breath", "③ Just endure it"],
+          correct: 1,
+          explanations: [
+            "Pushing beyond limits can harm your well-being.",
+            "Hitting your limit is a sign to reset.",
+            "Enduring alone doesn’t lead to solutions."
+          ]
+        },
+        {
+          q: "Q3: “Everything feels impossible”\nWhich phrase softens this feeling best?",
+          options: ["① Just give up", "② Step by step is just fine", "③ I have to do everything now"],
+          correct: 1,
+          explanations: [
+            "Giving up too soon may block new possibilities.",
+            "Step-by-step is realistic and doable.",
+            "Doing everything at once is overwhelming."
+          ]
+        },
+        {
+          q: "Q4: “No one understands me…”\nWhich phrase softens this feeling best?",
+          options: ["① I’ll just stay silent", "② Maybe I’m just wrong", "③ Let yourself understand you first"],
+          correct: 2,
+          explanations: [
+            "Silencing yourself builds loneliness.",
+            "Feelings aren’t wrong—they’re signals.",
+            "Understanding yourself is the first healing step."
+          ]
+        },
+        {
+          q: "Q5: “Why is it always me…?”\nWhich phrase softens this feeling best?",
+          options: ["① Try finding someone to lean on", "② Maybe I’m just unlucky", "③ Just endure silently"],
+          correct: 0,
+          explanations: [
+            "Feeling supported changes everything.",
+            "Unluckiness isn't the issue—connection is.",
+            "Silence can deepen your struggle."
+          ]
+        }
+      ]
+    };
+
+    let quiz = [];
+    let current = 0;
+
+    function startQuiz(lang) {
+      quiz = quizzes[lang];
+      current = 0;
+      document.getElementById("lang-select").style.display = "none";
+      document.getElementById("question").style.display = "block";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = quiz[current];
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("question").textContent = q.q;
+      const options = document.getElementById("options");
+      options.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option";
+        btn.onclick = () => {
+          const explanation = q.explanations[idx];
+          const isCorrect = idx === q.correct;
+          document.getElementById("result").innerHTML = (isCorrect ? "✅ 正解！" : "❌ 不正解…") + "<br><br>" + explanation;
+          if (current < quiz.length - 1) {
+            document.getElementById("next-button").textContent = "▶ 次の問題へ / Next Question";
+            document.getElementById("next-button").style.display = "block";
+          } else {
+            document.getElementById("next-button").style.display = "none";
+            document.getElementById("retry-button").style.display = "block";
+            document.getElementById("question").innerHTML += "\n\n🎉 お疲れさまでした！ / Well done!";
+          }
+        };
+        options.appendChild(btn);
+      });
+    }
+
+    function nextQuestion() {
+      current++;
+      document.getElementById("next-button").style.display = "none";
+      showQuestion();
+    }
+
+    function restartQuiz() {
+      document.getElementById("retry-button").style.display = "none";
+      document.getElementById("question").style.display = "none";
+      document.getElementById("lang-select").style.display = "block";
+      document.getElementById("options").innerHTML = "";
+      document.getElementById("result").innerHTML = "";
+    }
+  </script>
+</body>
+</html>
