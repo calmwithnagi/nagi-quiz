@@ -1,5 +1,66 @@
+
 <!DOCTYPE html>
 <html lang="ja">
-<head><meta charset="UTF-8"><title>やさしい言いかえクイズ（日本語）</title></head>
-<body><h1>日本語クイズ (サンプル)</h1></body>
+<head>
+  <meta charset="UTF-8">
+  <title>やさしい言いかえクイズ（日本語）</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #f9f9f9; }
+    #quiz-container { background: white; padding: 2em; border-radius: 12px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .question { font-size: 1.2em; margin-bottom: 1em; }
+    .option { display: block; margin: 0.5em 0; padding: 0.8em; background: #e0f7fa; border: none; border-radius: 8px; cursor: pointer; }
+    .option:hover { background: #b2ebf2; }
+    #result { margin-top: 1em; font-weight: bold; }
+    #next-button { display: none; margin-top: 1em; padding: 0.5em 1em; }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+    <div id="question" class="question"></div>
+    <div id="options"></div>
+    <div id="result"></div>
+    <button id="next-button" onclick="nextQuestion()">次の問題へ ▶</button>
+  </div>
+  <script>
+    const quizData = [
+      {
+        question: "Q1：「やってらんない！くそ！」\nやさしい言葉に言いかえるなら？",
+        options: [
+          "① 自分が悪いってことだよね",
+          "② これは、いったん距離を置くタイミングかも",
+          "③ やめてやる！"
+        ],
+        correct: 1,
+        explanation: [
+          "❌ 不正解…①→ 自分を責めすぎると自己肯定感が下がります。",
+          "✅ 正解！②→ 怒りの爆発を距離で調整することは、自分を守る方法です。",
+          "❌ 不正解…③→ 衝動的な放棄は後悔や孤立を招くことがあります。"
+        ]
+      }
+    ];
+    let current = 0;
+    function showQuestion() {
+      const q = quizData[current];
+      document.getElementById("question").textContent = q.question;
+      const options = document.getElementById("options");
+      options.innerHTML = "";
+      document.getElementById("result").innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option";
+        btn.onclick = () => {
+          document.getElementById("result").textContent = q.explanation[idx];
+          document.getElementById("next-button").style.display = "none";
+        };
+        options.appendChild(btn);
+      });
+    }
+    function nextQuestion() {
+      current++;
+      showQuestion();
+    }
+    showQuestion();
+  </script>
+</body>
 </html>
