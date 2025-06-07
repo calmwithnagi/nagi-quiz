@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>やさしい言いかえクイズ（日本語）</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #f9f9f9; }
+    #quiz-container { background: white; padding: 2em; border-radius: 12px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .question { font-size: 1.2em; margin-bottom: 1em; }
+    .option { display: block; margin: 0.5em 0; padding: 0.8em; background: #e0f7fa; border: none; border-radius: 8px; cursor: pointer; }
+    .option:hover { background: #b2ebf2; }
+    #result { margin-top: 1em; font-weight: bold; white-space: pre-wrap; }
+    #next-button { display: none; margin-top: 1em; padding: 0.5em 1em; }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+    <div id="question" class="question"></div>
+    <div id="options"></div>
+    <div id="result"></div>
+    <button id="next-button" onclick="nextQuestion()">次の問題へ ▶</button>
+  </div>
+  <script>
+    const quizData = [
+      {
+        question: "Q1：「やってらんない！くそ！」\nやさしい言葉に言いかえるなら？",
+        options: ["① 自分が悪いってことだよね", "② これは、いったん距離を置くタイミングかも", "③ やめてやる！"],
+        correct: 1,
+        explanations: [
+          "❌ 不正解…①→ 自責の思考は、自信と回復力を奪います。",
+          "✅ 正解！②→ 怒りをそのまま出す前に“間”を置くことで、自分を守る選択に。",
+          "❌ 不正解…③→ 衝動的な放棄は、後悔や孤立を招くことがあります。"
+        ]
+      },
+      {
+        question: "Q2：「もう限界…」\nやさしい言葉に言いかえるなら？",
+        options: ["① 限界を超えてみよう", "② 深呼吸してリセットしよう", "③ とにかく耐えよう"],
+        correct: 1,
+        explanations: [
+          "❌ 不正解…①→ 無理な前進は、心身の破綻につながることがあります。",
+          "✅ 正解！②→ 限界＝終わりではなく、リセットのサインと受け止めて。",
+          "❌ 不正解…③→ 耐えるだけでは、回復のタイミングを逃してしまいます。"
+        ]
+      },
+      {
+        question: "Q3：「何もかも無理」\nやさしい言葉に言いかえるなら？",
+        options: ["① 諦めよう", "② 少しずつでいい", "③ 全部やらなきゃ"],
+        correct: 1,
+        explanations: [
+          "❌ 不正解…①→ 諦めは一時的な安心かもしれませんが、前に進む力を奪います。",
+          "✅ 正解！②→ 全部無理、は脳の錯覚。「ひとつずつ」が現実的な対処法。",
+          "❌ 不正解…③→ 完璧主義は、自分を追い詰める要因に。"
+        ]
+      },
+      {
+        question: "Q4：「誰もわかってくれない」\nやさしい言葉に言いかえるなら？",
+        options: ["① 感情を出すと迷惑だから黙ろう", "② 自分の気持ちは間違ってるかもしれない", "③ まず自分が自分をわかってあげよう"],
+        correct: 2,
+        explanations: [
+          "❌ 不正解…①→ 感情を抑えることは、自分の存在を否定することにもつながります。",
+          "❌ 不正解…②→ 自分の気持ちを疑いすぎると、心が麻痺します。",
+          "✅ 正解！③→ 他人の理解を求める前に、自分が自分に寄り添うことが第一歩です。"
+        ]
+      },
+      {
+        question: "Q5：「なんで私ばっかり…」\nやさしい言葉に言いかえるなら？",
+        options: ["① 頼れる誰かを探してみよう", "② みんな頑張ってるから比べない", "③ 愚痴を言っても何も変わらない"],
+        correct: 0,
+        explanations: [
+          "✅ 正解！①→ “助けを求める”ことは、弱さではなく回復の力です。",
+          "❌ 不正解…②→ 比較よりも、自分に合った支えを探すことが大切です。",
+          "❌ 不正解…③→ 愚痴の奥には助けを求める気持ちが隠れていることも。"
+        ]
+      }
+    ];
+    let current = 0;
+    function showQuestion() {
+      document.getElementById("result").innerHTML = "";
+      const q = quizData[current];
+      document.getElementById("question").textContent = q.question;
+      const options = document.getElementById("options");
+      options.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option";
+        btn.onclick = () => {
+          document.getElementById("result").textContent = q.explanations[idx];
+          document.getElementById("next-button").style.display = current < quizData.length - 1 ? "block" : "none";
+        };
+        options.appendChild(btn);
+      });
+    }
+    function nextQuestion() {
+      current++;
+      if (current < quizData.length) {
+        showQuestion();
+        document.getElementById("next-button").style.display = "none";
+      } else {
+        document.getElementById("quiz-container").innerHTML = "<h2>🎉 全問終了！また挑戦してみてね！</h2>";
+      }
+    }
+    showQuestion();
+  </script>
+</body>
+</html>
